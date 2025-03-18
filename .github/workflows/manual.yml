@@ -1,0 +1,36 @@
+name: Build and Syntax Check
+
+#When the workflow runs
+on:
+  push:
+    branches: ["master"] 
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  #Creates a virtual machine
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout Repository
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    #Set up .NET SDK
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0'
+
+    # Restore any dependencies
+    - name: Dependencies
+      run: dotnet restore
+
+    # Run Tests
+    - name: Unit Test
+      run: dotnet test
+
+    # Build the Project
+    - name: Project Build
+      run: dotnet build --configuration release
